@@ -176,6 +176,10 @@ def dataRequest():
 		else:
 			return "Please enter a user name"
 
+@app.route('/')
+def renderHomePage():
+	return render_template('index.html')
+
 if __name__ == '__main__':
 	#app.debug = True
 	#app.run()
