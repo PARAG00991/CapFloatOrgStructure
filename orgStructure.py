@@ -8,18 +8,7 @@ app = Flask(__name__)
 
 dataList = []
 
-@app.route('/org/<int:orgid>/')
-def getOrgStruct(orgid):
-	'''
-	#Read JSON corresponding to organisation
-	with open('./orgSt.json') as jsonData :
-		orgStructure = json.load(jsonData)
-	orgList = orgStructure["Org"]
-	for orgdict in orgList:
-		print(orgdict, file = sys.stdout)
-		if orgdict["OrgID"] == orgid:
-			return jsonify(orgdict)
-	'''
+def getOrgData(orgid):
 	orgdict = {}
 	#First query orgTable to get orgName
 	conn = sqlite3.connect('OrgData.db')
@@ -30,7 +19,7 @@ def getOrgStruct(orgid):
 
 	cur.execute("Select orgName from orgTable where orgID = {}".format(orgid))
 	rows1 = cur.fetchall()
-	print(rows1)
+	#print(rows1)
 
 	if len(rows1) != 0:
 		cur.execute("WITH RECURSIVE teamPathTable(orgID, teamID, teamName, teamPath) AS(\
@@ -47,7 +36,7 @@ def getOrgStruct(orgid):
 		)
 
 		rows2 = cur.fetchall()
-		print(rows2)
+		#print(rows2)
 
 	conn.close()
 	print("Closed database successfully")
@@ -66,7 +55,7 @@ def getOrgStruct(orgid):
 			teamReachPath = row["teamPath"]
 			#print(teamInfo)
 			teamDepths = teamReachPath.split('>')
-			print(teamDepths)
+			#print(teamDepths)
 			teamLevel = orgdict['Teams']
 			for depth in teamDepths:
 				temp = depth.split(';')
@@ -81,26 +70,45 @@ def getOrgStruct(orgid):
 						if "Teams" not in presentTeamDict:
 							presentTeamDict["Teams"] = []
 						teamLevel = presentTeamDict["Teams"]
-						print('hi.................')
+						#print('hi.................')
 						found = True
 						break
 	
 				if found == False:	#team not found in present dict, insert an entry
 					teamLevel.append({"TeamName" : teamName, "Repos" : repoList, "users" : userids})
 
-		print(orgdict)
-		return jsonify(orgdict)
+		return orgdict
+
+@app.route('/org/<int:orgid>/')
+def getOrgStruct(orgid):
+	'''
+	#Read JSON corresponding to organisation
+	with open('./orgSt.json') as jsonData :
+		orgStructure = json.load(jsonData)
+	orgList = orgStructure["Org"]
+	for orgdict in orgList:
+		print(orgdict, file = sys.stdout)
+		if orgdict["OrgID"] == orgid:
+			return jsonify(orgdict)
+	'''
+	dataDict = getOrgData(orgid)	
+	if dataDict:
+		return jsonify(dataDict)
 	else:
 		return 'Invalid Organisation %d... No data exists...' % orgid
 
 def parseJSONData(teamList, userid, orgName):
 	for teamDict in teamList:
 		#check if a particular user id exists in this team or not
-		if userid in teamDict["users"]:
+		#print(teamDict["users"])
+		userlist = teamDict["users"].split(',')
+		#print(userlist)
+		if userid in userlist:
 			Dict = {}
 			if "Repos" in teamDict:
 				#print(teamDict["Repos"])
-				Dict["Repos"] = teamDict["Repos"]
+				repos = teamDict["Repos"].split(',')
+				Dict["Repos"] = repos
 			else:
 				#print("Empty repo")
 				Dict["Repos"] = ''
@@ -114,15 +122,33 @@ def parseJSONData(teamList, userid, orgName):
 
 @app.route('/user/<userid>/')
 def getUserData(userid):
+	'''
 	#ParseJSON data according to userid and return accordingly
 	with open('./orgSt.json') as jsonData :
                 orgStructure = json.load(jsonData)
         orgList = orgStructure["Org"]
+	'''
 
-	for organisation in orgList:
+	conn = sqlite3.connect('OrgData.db')
+        print("Opened database successfully")
+
+        conn.row_factory = sqlite3.Row
+        cur = conn.cursor()
+
+        cur.execute("Select * from orgTable;")
+        orgrows = cur.fetchall()
+        print(orgrows)
+
+	conn.close()
+        print("Closed database successfully")
+
+	for organisation in orgrows:
 		orgName = organisation["OrgName"]
-		parseJSONData(organisation["Teams"], userid, orgName)
-	print(dataList)
+		orgid = organisation["orgID"]
+		teamList = getOrgData(orgid)["Teams"]
+		print(teamList)
+		parseJSONData(teamList, userid, orgName)
+	#print(dataList)
 	if not dataList:
 		return "Data corresponding to particular UserId doesn't exist..."
 	else :
