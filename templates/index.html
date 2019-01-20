@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+   <body>
+      <form action = "http://localhost:5000/org" method = "post" id = "orgform">
+         <p>Enter Organisation ID (possibly 1 or 2) :</p>
+         <p><input type = "number" name = "orgid" />
+         <input type = "submit" value = "GetOrgStructure" form="orgform" />
+      </form>
+
+      <form action = "http://localhost:5000/user" method = "post" id = "authform">
+         <p>Authenticate to check your repo, team and org (Enter User Id: possibly user1, user2
+		, user3, user4, user5) :</p>
+         <p><input type = "text" name = "userid" />
+         <input type = "submit" value = "Authenticate" form="authform" />
+      </form>	
+   </body>
+</html>

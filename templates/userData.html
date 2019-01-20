@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+	<body>
+		<h1>Hello {{userid}}! </h1>
+
+		<table border = 1>
+		<tr>
+			<th> Repo </th>
+			<th> Team </th>
+			<th> Organisation </th>
+		</tr>
+		{% for entry in data %}
+			<tr>
+				<td>
+				{% if not entry['Repos']%}
+					No repo
+				{% else %}
+					{% for repo in entry['Repos'] %}
+						{{repo}}
+					{% endfor %}
+				{% endif %}
+				</td>
+				<td> {{entry['Team']}} </td>
+				<td> {{entry['Org']}} </td>
+			</tr>
+		{% endfor %}
+      		</table>
+	</body>
+</html>

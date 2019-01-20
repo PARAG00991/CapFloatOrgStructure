@@ -1,0 +1,79 @@
+{
+"Org" : [
+    {
+      "OrgID" : 1,
+      "OrgName" : "Org1",
+      "Teams" : [
+                   {
+                     "TeamName" : "Team 1",
+                     "Repos" : ["Repo 3"],
+		     "users" : ["user1", "user4"],
+                     "Teams" : [
+                                  {
+                                    "TeamName" : "Team 2",
+                                    "Repos" : ["Repo 1"],
+				    "users" : ["user2", "user3"]
+                                  },
+                                  {
+                                    "TeamName" : "Team 3",
+                                    "Repos" : ["Repo 2", "Repo 11"],
+				    "users" : ["user4", "user5"]
+                                  },
+                                  {
+                                    "TeamName" : "Team 4",
+				    "users" : ["user1", "user2", "user5"]
+                                  }
+                       ]
+                   },
+                   {
+                     "TeamName" : "Team 5",
+                     "Repos" : ["Repo 4"],
+		     "users" : ["user3"],
+                     "Teams" : [
+                                  {
+                                    "TeamName" : "Team 6",
+                                    "Repos" : ["Repo 5", "Repo 12", "Repo 7"],
+				    "users" : ["user1", "user2", "user4", "user5"],
+                                    "Teams" : [
+                                                {
+                                                  "TeamName" : "Team 7",
+						  "users" : ["user4", "user5"],
+                                                  "Repos" : ["Repo 6"]
+                                                }
+                                      ]
+                                  }
+                       
+                       ]
+                   }
+        ]
+    },
+    {
+      "OrgID" : 2,
+      "OrgName" : "Org2",
+      "Teams" : [
+                  {
+                    "TeamName" : "Team 8",
+		    "users" : ["user1", "user2"],
+                    "Repos" : ["Repo 9"],
+                    "Teams" : [
+                                {
+                                  "TeamName" : "Team 10",
+				  "users" : ["user5"],
+                                  "Repos" : ["Repo 8"]
+                                }
+                              ]
+                  },
+                  {
+                    "TeamName" : "Team 9",
+		    "users" : ["user3", "user4"],
+                    "Repos" : ["Repo 10", "Repo 13"]
+                  },
+                  {
+                    "TeamName" : "Team 10",
+		    "users" : ["user3"]
+                  }
+        ]
+    }
+    ]
+}
+
